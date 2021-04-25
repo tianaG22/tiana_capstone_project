@@ -6,11 +6,10 @@ os.system("clear")
 new_text = ""
 
 #self.method
-#button same length 
 #GUI visual 
-#pizza to other key user choice 
-#before every fuction make sure to clear the words so the result doesn't double up
 #the size of the window 
+#A1, ascii? and caesar error with ' '  DEcaesar have error with symbols 
+#when there's no key?
 
 #tkinter set
 root = tkinter.Tk()
@@ -62,10 +61,11 @@ class Encode():
         for words in self.text:
             #because there's also upper case letters (what happens to numbers?)
             ascii_num = ord(words.lower())
-            shifted_five = ascii_num + 5
-            if shifted_five > 122:
-                shifted_five = (shifted_five - 122) + 97
-            new_text += chr(shifted_five)
+            the_number = int(txt_key.get())
+            shifted = ascii_num + the_number
+            if shifted > 122:
+                shifted = (shifted - 122) + 96
+            new_text += chr(shifted)
         global lbl_result
         lbl_result["text"] = new_text
     #4
@@ -97,28 +97,31 @@ class Encode():
         global txt_before
         self.text = txt_before.get()
         #result_word
-        pizza_index = 0
-        pizza = "pizza"
+        key_index = 0
+        key = txt_key.get()
         alphabet_number = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8, "j":9, "k":10, "l":11, "m":12, "n":13, "o":14, "p":15, "q":16, "r":17, "s":18, "t":19, "u":20, "v":21, "w":22, "x":23, "y":24, "z":25}
         for letter in self.text:
-            column_number = alphabet_number[letter]
-            #when you went through the word pizza: pizza has to loop
-            if pizza_index > len(pizza):
-                pizza_index = 0
-            #which letter in pizza 
-            row_number = alphabet_number[pizza[pizza_index]]
-            #preparing for the next round in loop 
-            pizza_index += 1
-            #adding the number of column and row 
-            result_letter_number = column_number + row_number
-            #number has to be less than 25=z
-            if result_letter_number > 25:
-                result_letter_number -= 25 
-            #find the key from value
-            keys = list(alphabet_number.keys())
-            values = list(alphabet_number.values())
-            index = values.index(result_letter_number)
-            result_letter = keys[index] 
+            if letter in alphabet_number:
+                column_number = alphabet_number[letter]
+                #when you went through the word pizza: pizza has to loop
+                if key_index == len(key):
+                    key_index = 0
+                #which letter in pizza 
+                row_number = alphabet_number[key[key_index]]
+                #preparing for the next round in loop 
+                key_index += 1
+                #adding the number of column and row 
+                result_letter_number = column_number + row_number
+                #number has to be less than 25=z
+                if result_letter_number > 25:
+                    result_letter_number -= 25 
+                #find the key from value
+                keys = list(alphabet_number.keys())
+                values = list(alphabet_number.values())
+                index = values.index(result_letter_number)
+                result_letter = keys[index] 
+            else:
+                result_letter = letter
             #adding to result_word
             new_text += result_letter 
         global lbl_result
@@ -135,6 +138,8 @@ class Encode():
         new_text = ""
         global lbl_result
         lbl_result["text"] = ""
+        txt_before.delete(0,"end")
+        txt_key.delete(0,"end")
     
 
 class Decode():
@@ -169,11 +174,12 @@ class Decode():
         global txt_before
         self.text = txt_before.get()
         for letter in self.text:
+            the_number = int(txt_key.get())
             ascii_num = ord(letter.lower())
-            shifted_five = ascii_num - 5
-            if shifted_five < 97:
-                shifted_five = 123 - (97 - shifted_five)
-            new_text += chr(shifted_five)
+            shifted = ascii_num - the_number
+            if shifted < 97:
+                shifted = 123 - (97 - shifted)
+            new_text += chr(shifted)
         global lbl_result
         lbl_result["text"] = new_text
     #4
@@ -201,34 +207,37 @@ class Decode():
         global lbl_result
         lbl_result["text"] = new_text
     #6
-    #debug ' '
+    #debug 
     def decode_v_cipher_pizza(self):
         global new_text
         new_text = ""
         global txt_before
         self.text = txt_before.get()
-        pizza_index = 0
-        pizza = "pizza"
+        key_index = 0
+        key = txt_key.get()
         alphabet_number = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8, "j":9, "k":10, "l":11, "m":12, "n":13, "o":14, "p":15, "q":16, "r":17, "s":18, "t":19, "u":20, "v":21, "w":22, "x":23, "y":24, "z":25}
         for letter in self.text:
-            encode_number = alphabet_number[letter]
-            #when you went through the word pizza: pizza has to loop
-            if pizza_index > len(pizza):
-                pizza_index = 0
-            #which letter in pizza 
-            row_number = alphabet_number[pizza[pizza_index]]
-            #preparing for the next round in loop 
-            pizza_index += 1
-            #getting column number  
-            column_number = encode_number - row_number
-            #number has to be more than 0=a
-            if column_number < 0:
-                column_number += 25 
-            #find the key from value
-            keys = list(alphabet_number.keys())
-            values = list(alphabet_number.values())
-            index = values.index(column_number)
-            result_letter = keys[index] 
+            if letter in alphabet_number:
+                encode_number = alphabet_number[letter]
+                #when you went through the word pizza: pizza has to loop
+                if key_index == len(key):
+                    key_index = 0
+                #which letter in pizza 
+                row_number = alphabet_number[key[key_index]]
+                #preparing for the next round in loop 
+                key_index += 1
+                #getting column number  
+                column_number = encode_number - row_number
+                #number has to be more than 0=a
+                if column_number < 0:
+                    column_number += 25 
+                #find the key from value
+                keys = list(alphabet_number.keys())
+                values = list(alphabet_number.values())
+                index = values.index(column_number)
+                result_letter = keys[index] 
+            else:
+                result_letter = letter
             #adding to result_word
             new_text += result_letter 
         global lbl_result
@@ -243,19 +252,19 @@ decoder = Decode()
 
 #GUI widgets 
 #encode buttons 
-btn_encode_gibberish = tkinter.Button(root, text="Gibberish", command=encoder.gibberish, width=10)
+btn_encode_gibberish = tkinter.Button(root, text="Gibberish", command=encoder.gibberish, width=10, bg="#97c6c9")
 btn_encode_gibberish.grid(row=2, column=0)
-btn_encode_ascii = tkinter.Button(root, text="ASCII", command=encoder.ascii_cipher, width=10)
+btn_encode_ascii = tkinter.Button(root, text="ASCII", command=encoder.ascii_cipher, width=10, bg="#97c6c9")
 btn_encode_ascii.grid(row=3, column=0)
-btn_encode_caesar = tkinter.Button(root, text="Caesar Five", command=encoder.caesar_cipher_five, width=10)
+btn_encode_caesar = tkinter.Button(root, text="Caesar", command=encoder.caesar_cipher_five, width=10, bg="#97c6c9")
 btn_encode_caesar.grid(row=4, column=0)
-btn_encode_A1Z26 = tkinter.Button(root, text="A1Z26", command=encoder.A1Z26, width=10)
+btn_encode_A1Z26 = tkinter.Button(root, text="A1Z26", command=encoder.A1Z26, width=10, bg="#97c6c9")
 btn_encode_A1Z26.grid(row=5, column=0)
-btn_encode_square_one = tkinter.Button(root, text="Square One", command=encoder.square_and_one, width=10)
+btn_encode_square_one = tkinter.Button(root, text="Square One", command=encoder.square_and_one, width=10, bg="#97c6c9")
 btn_encode_square_one.grid(row=6, column=0)
-btn_encode_vigenere = tkinter.Button(root, text="Vigenere", command=encoder.v_cipher_pizza, width=10)
+btn_encode_vigenere = tkinter.Button(root, text="Vigenere", command=encoder.v_cipher_pizza, width=10, bg="#97c6c9")
 btn_encode_vigenere.grid(row=7, column=0)
-btn_clear = tkinter.Button(root, text="Clear", command=encoder.clear_text, width=10)
+btn_clear = tkinter.Button(root, text="Clear", command=encoder.clear_text, width=10, bg="#97c6c9")
 btn_clear.grid(row=9, column=3)
 
 #decode buttons 
@@ -263,7 +272,7 @@ btn_decode_gibberish = tkinter.Button(root, text="DEGibberish", command=decoder.
 btn_decode_gibberish.grid(row=2, column=3)
 btn_decode_ascii = tkinter.Button(root, text="DEASCII", command=decoder.decode_ascii_cipher, width=10)
 btn_decode_ascii.grid(row=3, column=3)
-btn_decode_caesar = tkinter.Button(root, text="DECaesar Five", command=decoder.decode_caesar_cipher_five, width=10)
+btn_decode_caesar = tkinter.Button(root, text="DECaesar", command=decoder.decode_caesar_cipher_five, width=10)
 btn_decode_caesar.grid(row=4, column=3)
 btn_decode_A1Z26 = tkinter.Button(root, text="DEA1Z26", command=decoder.decode_A1Z26, width=10)
 btn_decode_A1Z26.grid(row=5, column=3)
